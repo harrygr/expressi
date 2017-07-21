@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "ts-node ./src/server.ts",
+    "dev": "DEBUG=expressi:server nodemon --watch 'src/**/*.ts' --watch 'views/**/*.hbs'  --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/server.ts",
     "build": "tsc",
     "serve": "node ./dist/server.js"
   },
@@ -21,6 +21,7 @@
     "express": "~4.15.2",
     "hbs": "~4.0.1",
     "morgan": "~1.8.1",
+    "nodemon": "^1.11.0",
     "serve-favicon": "~2.4.2",
     "ts-node": "^3.2.0",
     "typescript": "^2.4.1"
