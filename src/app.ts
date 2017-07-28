@@ -29,6 +29,16 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(publicDir)))
 
+app.use(function (req, res, next) {
+  const authCookie = req.cookies.expressi_auth
+  if (authCookie === undefined) {
+    res.cookie('expressi_auth', 'secret_token', { maxAge: 900000, httpOnly: true })
+  } else {
+    console.log('Cookie exists', authCookie)
+  }
+  next()
+})
+
 app.use('/', index)
 app.use('/users', users)
 
