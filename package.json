@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "DEBUG=expressi:server nodemon --watch 'src/**/*.ts' --watch 'views/**/*.hbs'  --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/server.ts",
+    "dev:server": "DEBUG=expressi:server nodemon --watch 'src/**/*.ts' --watch 'views/**/*.hbs' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/server.ts",
+    "dev:web": "node ./react-ui/scripts/watch.js",
+    "dev": "yarn dev:server && yarn dev:web",
     "build": "tsc",
     "serve": "node ./dist/server.js"
   },

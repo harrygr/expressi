@@ -21,26 +21,37 @@ app.set('view engine', 'hbs')
 
 const publicDir = path.join(`${__dirname}/..`, 'public')
 
+const uiDir = path.join(`${__dirname}/..`, 'react-ui/build')
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(publicDir, 'favicon.ico')))
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
-app.use(express.static(path.join(publicDir)))
 
-app.use(function (req, res, next) {
-  const authCookie = req.cookies.expressi_auth
-  if (authCookie === undefined) {
-    res.cookie('expressi_auth', 'secret_token', { maxAge: 900000, httpOnly: true })
-  } else {
-    console.log('Cookie exists', authCookie)
-  }
+app.use((req, res, next) => {
+  res.cookie('expressi_time', `time is ${Date.now()}`, { maxAge: 90000 })
   next()
 })
 
-app.use('/', index)
-app.use('/users', users)
+app.use(express.static(path.join(publicDir)))
+
+const staticApp = express.static(uiDir)
+
+// use this to blindly statically serve the react app from the staticApp dir
+app.use('/agent', staticApp)
+app.use('/agent/*', staticApp)
+
+// use this access the request first. E.g. can check for token before serving, although same can be acheived through middleware,
+// but allows conditional static serving
+// app.get('/agent/*', function (req, res) {
+//   const path = req.params[0] ? req.params[0] : 'index.html';
+//   res.sendfile(path, { root: uiDir });
+// });
+
+app.get('/', index)
+app.get('/users', users)
 
 // catch 404 and forward to error handler
 app.use(function (req: express.Request, res: express.Response, next: express.NextFunction) {
